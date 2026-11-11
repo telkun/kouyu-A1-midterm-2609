@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>口语期中考试 A1 复习 — Units 1-5</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel2: #1f232c;
+    --border: #2a2f3a;
+    --text: #e8eaed;
+    --muted: #9aa3b2;
+    --accent: #e8534a;
+    --accent2: #4ade80;
+    --accent3: #60a5fa;
+    --warn: #fbbf24;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", Segoe UI, Roboto, sans-serif;
+    background: var(--bg); color: var(--text); min-height: 100vh;
+  }
+  header {
+    padding: 16px 20px 10px; text-align: center; border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; background: var(--bg); z-index: 20;
+  }
+  header h1 { font-size: 1.2rem; margin: 0 0 2px; }
+  header .sub { color: var(--muted); font-size: 0.8rem; }
+  .unit-tabs {
+    display: flex; gap: 6px; overflow-x: auto; padding: 10px 14px; background: var(--panel);
+    border-bottom: 1px solid var(--border); position: sticky; top: 56px; z-index: 19;
+  }
+  .unit-tab {
+    flex: 0 0 auto; padding: 8px 14px; border-radius: 20px; background: var(--panel2);
+    border: 1px solid var(--border); color: var(--muted); cursor: pointer; font-size: 0.85rem; white-space: nowrap;
+  }
+  .unit-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .mode-tabs {
+    display: flex; gap: 6px; padding: 10px 14px; flex-wrap: wrap;
+  }
+  .mode-tab {
+    flex: 1 1 auto; min-width: 90px; text-align: center; padding: 10px 8px; border-radius: 10px;
+    background: var(--panel2); border: 1px solid var(--border); color: var(--muted); cursor: pointer; font-size: 0.82rem;
+  }
+  .mode-tab.active { background: var(--accent3); color: #0f1115; border-color: var(--accent3); font-weight: 600; }
+  main { max-width: 760px; margin: 0 auto; padding: 14px 14px 60px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 14px;
+  }
+  .card h2 { margin: 0 0 10px; font-size: 1rem; color: var(--accent3); }
+  button.btn {
+    background: var(--accent3); color: #0f1115; border: none; border-radius: 8px; padding: 9px 14px;
+    font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  }
+  button.btn.secondary { background: var(--panel2); color: var(--text); border: 1px solid var(--border); }
+  button.btn.green { background: var(--accent2); }
+  button.btn:disabled { opacity: 0.4; cursor: default; }
+  /* ---- vocab list ---- */
+  .vocab-list { display: flex; flex-direction: column; gap: 6px; }
+  .vocab-row {
+    display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: baseline;
+    padding: 8px 10px; border-radius: 8px; background: var(--panel2);
+  }
+  .vocab-row .hz { font-size: 1.1rem; }
+  .vocab-row .py { color: var(--accent2); font-size: 0.9rem; min-width: 70px; text-align: right; }
+  .vocab-row .en { color: var(--muted); font-size: 0.78rem; }
+  .vocab-row .py.hidden { visibility: hidden; }
+  .toggle-row { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 10px; }
+  /* ---- quiz ---- */
+  .quiz-progress { color: var(--muted); font-size: 0.78rem; margin-bottom: 6px; }
+  .quiz-hz { font-size: 2.6rem; text-align: center; margin: 14px 0 6px; }
+  .quiz-en { text-align: center; color: var(--muted); margin-bottom: 16px; font-size: 0.85rem; }
+  .quiz-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .quiz-opt {
+    padding: 14px 8px; text-align: center; border-radius: 10px; background: var(--panel2);
+    border: 1px solid var(--border); font-size: 1.1rem; cursor: pointer;
+  }
+  .quiz-opt.correct { background: rgba(74,222,128,0.18); border-color: var(--accent2); color: var(--accent2); }
+  .quiz-opt.wrong { background: rgba(232,83,74,0.18); border-color: var(--accent); color: var(--accent); }
+  .quiz-opt.disabled { pointer-events: none; }
+  .quiz-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+  .quiz-score { color: var(--muted); font-size: 0.82rem; }
+  /* ---- dialogue ---- */
+  .dlg-line { padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .dlg-line:last-child { border-bottom: none; }
+  .dlg-sp { color: var(--warn); font-weight: 600; font-size: 0.8rem; margin-bottom: 2px; }
+  .dlg-hz { font-size: 1.05rem; margin-bottom: 2px; }
+  .dlg-py { color: var(--accent3); font-size: 0.85rem; }
+  .dlg-py.hidden { display: none; }
+  /* ---- scenario ---- */
+  .scn-block { margin-bottom: 14px; }
+  .scn-block h3 { font-size: 0.85rem; color: var(--accent2); margin: 0 0 6px; }
+  .scn-block ul { margin: 0; padding-left: 20px; }
+  .scn-block li { margin-bottom: 4px; font-size: 0.92rem; }
+  .sentence-counter {
+    display: flex; align-items: center; justify-content: space-between; background: var(--panel2);
+    border-radius: 10px; padding: 10px 14px; margin-bottom: 14px;
+  }
+  .sentence-counter .num { font-size: 1.6rem; font-weight: 700; }
+  .sentence-counter .num.ok { color: var(--accent2); }
+  .counter-btns button {
+    width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel);
+    color: var(--text); font-size: 1.1rem; cursor: pointer; margin-left: 6px;
+  }
+  .mistake-item {
+    display: flex; justify-content: space-between; align-items: center; padding: 8px 10px;
+    background: var(--panel2); border-radius: 8px; margin-bottom: 6px;
+  }
+  .mistake-item .x { color: var(--muted); cursor: pointer; padding: 2px 8px; }
+  .empty-state { color: var(--muted); text-align: center; padding: 20px 0; font-size: 0.85rem; }
+  .pill { display:inline-block; font-size:0.7rem; padding:2px 8px; border-radius:10px; background:var(--panel2); color:var(--muted); margin-left:6px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>口语期中考试复习 🀄</h1>
+  <div class="sub">新目标汉语口语课本(4) · Units 1–5 · 11.12 口语期中考试</div>
+</header>
+
+<div class="unit-tabs" id="unitTabs"></div>
+<div class="mode-tabs" id="modeTabs">
+  <div class="mode-tab" data-mode="vocab">生词表</div>
+  <div class="mode-tab" data-mode="quiz">声调测验</div>
+  <div class="mode-tab" data-mode="dialogue">对话朗读</div>
+  <div class="mode-tab" data-mode="scenario">自由表达</div>
+  <div class="mode-tab" data-mode="mistakes">错题本</div>
+</div>
+
+<main id="main"></main>
+
+<script>
+const UNITS = [{"id": 1, "title": "谈休闲娱乐", "subtitle": "Talking about Leisure and Entertainment", "vocab": [{"hz": "京剧", "py": "jīngjù", "pos": "名", "en": "Beijing opera"}, {"hz": "武戏", "py": "wǔxì", "pos": "名", "en": "martial play"}, {"hz": "精彩", "py": "jīngcǎi", "pos": "形", "en": "wonderful"}, {"hz": "文戏", "py": "wénxì", "pos": "名", "en": "singing play"}, {"hz": "唱腔", "py": "chàngqiāng", "pos": "名", "en": "singing (opera style)"}, {"hz": "围", "py": "wéi", "pos": "动", "en": "to surround"}, {"hz": "出事", "py": "chūshì", "pos": "动", "en": "to have an accident"}, {"hz": "下棋", "py": "xiàqí", "pos": "—", "en": "to play chess"}, {"hz": "体验", "py": "tǐyàn", "pos": "动", "en": "to experience"}, {"hz": "娱乐", "py": "yúlè", "pos": "名", "en": "entertainment"}, {"hz": "检验", "py": "jiǎnyàn", "pos": "动", "en": "to test"}, {"hz": "成果", "py": "chéngguǒ", "pos": "名", "en": "achievement"}, {"hz": "拦", "py": "lán", "pos": "动", "en": "to stop"}, {"hz": "差点儿", "py": "chàdiǎnr", "pos": "副", "en": "almost"}, {"hz": "支招儿", "py": "zhīzhāor", "pos": "动", "en": "to give advice"}, {"hz": "广场", "py": "guǎngchǎng", "pos": "名", "en": "square"}, {"hz": "广场舞", "py": "guǎngchǎngwǔ", "pos": "名", "en": "square dance"}, {"hz": "过山车", "py": "guòshānchē", "pos": "名", "en": "roller coaster"}, {"hz": "惊险", "py": "jīngxiǎn", "pos": "形", "en": "breathtaking"}, {"hz": "刺激", "py": "cìjī", "pos": "动", "en": "to stimulate"}, {"hz": "健身房", "py": "jiànshēnfáng", "pos": "名", "en": "gym"}, {"hz": "激流勇进", "py": "jīliúyǒngjìn", "pos": "—", "en": "flume ride"}, {"hz": "空闲", "py": "kòngxián", "pos": "名/形", "en": "leisure; leisurely"}], "quiz": [{"hanzi": "京剧", "correct": "jīngjù", "options": ["jìngjù", "jíngjù", "jīngjū", "jīngjù"], "en": "Beijing opera"}, {"hanzi": "武戏", "correct": "wǔxì", "options": ["wǔxì", "wǔxī", "wùxì", "wùxī"], "en": "martial play"}, {"hanzi": "精彩", "correct": "jīngcǎi", "options": ["jǐngcǎi", "jīngcǎi", "jīngcái", "jìngcǎi"], "en": "wonderful"}, {"hanzi": "文戏", "correct": "wénxì", "options": ["wènxì", "wénxī", "wénxì", "wènxǐ"], "en": "singing play"}, {"hanzi": "唱腔", "correct": "chàngqiāng", "options": ["chàngqiàng", "chàngqiāng", "chǎngqiāng", "chángqiāng"], "en": "singing (opera style)"}, {"hanzi": "围", "correct": "wéi", "options": ["wěi", "wēi", "wéi", "wèi"], "en": "to surround"}, {"hanzi": "出事", "correct": "chūshì", "options": ["chùshì", "chūshǐ", "chūshì", "chùshī"], "en": "to have an accident"}, {"hanzi": "下棋", "correct": "xiàqí", "options": ["xiàqí", "xiǎqí", "xiàqì", "xiàqǐ"], "en": "to play chess"}, {"hanzi": "体验", "correct": "tǐyàn", "options": ["tìyān", "tìyàn", "tǐyān", "tǐyàn"], "en": "to experience"}, {"hanzi": "娱乐", "correct": "yúlè", "options": ["yúlē", "yùlè", "yǔlè", "yúlè"], "en": "entertainment"}, {"hanzi": "检验", "correct": "jiǎnyàn", "options": ["jiānyàn", "jiǎnyàn", "jiànyàn", "jiānyǎn"], "en": "to test"}, {"hanzi": "成果", "correct": "chéngguǒ", "options": ["chéngguō", "chéngguó", "chéngguǒ", "chéngguò"], "en": "achievement"}, {"hanzi": "拦", "correct": "lán", "options": ["lǎn", "làn", "lān", "lán"], "en": "to stop"}, {"hanzi": "差点儿", "correct": "chàdiǎnr", "options": ["chàdiànr", "chàdiānr", "chàdiǎnr", "chǎdiànr"], "en": "almost"}, {"hanzi": "支招儿", "correct": "zhīzhāor", "options": ["zhīzhāor", "zhízhàor", "zhǐzhǎor", "zhízhāor"], "en": "to give advice"}, {"hanzi": "广场", "correct": "guǎngchǎng", "options": ["guǎngchāng", "guángchāng", "guāngchǎng", "guǎngchǎng"], "en": "square"}, {"hanzi": "广场舞", "correct": "guǎngchǎngwǔ", "options": ["guāngchǎngwǔ", "guǎngchǎngwù", "guǎngchǎngwǔ", "guǎngchángwǔ"], "en": "square dance"}, {"hanzi": "过山车", "correct": "guòshānchē", "options": ["guóshānchē", "guòshǎnchē", "guòshānchē", "guòshànchè"], "en": "roller coaster"}, {"hanzi": "惊险", "correct": "jīngxiǎn", "options": ["jīngxiàn", "jīngxiān", "jīngxiǎn", "jíngxiǎn"], "en": "breathtaking"}, {"hanzi": "刺激", "correct": "cìjī", "options": ["cìjí", "cǐjī", "cìjī", "cíjī"], "en": "to stimulate"}, {"hanzi": "健身房", "correct": "jiànshēnfáng", "options": ["jiànshēnfáng", "jiǎnshēnfáng", "jiánshēnfáng", "jiánshěnfáng"], "en": "gym"}, {"hanzi": "激流勇进", "correct": "jīliúyǒngjìn", "options": ["jīliúyōngjìn", "jīliúyǒngjìn", "jīliúyǒngjǐn", "jīliúyóngjìn"], "en": "flume ride"}, {"hanzi": "空闲", "correct": "kòngxián", "options": ["kòngxián", "kōngxián", "kòngxiān", "kòngxiǎn"], "en": "leisure; leisurely"}], "dialogue": [{"sp": "小丽", "hz": "你觉得刚才看的京剧怎么样？", "py": "Nǐ juéde gāngcái kàn de jīngjù zěnmeyàng?"}, {"sp": "大龙", "hz": "很有意思！武戏简直太精彩了！", "py": "Hěn yǒu yìsi! Wǔxì jiǎnzhí tài jīngcǎi le!"}, {"sp": "小丽", "hz": "我更喜欢文戏，唱腔很美，服装也漂亮。", "py": "Wǒ gèng xǐhuan wénxì, chàngqiāng hěn měi, fúzhuāng yě piàoliang."}, {"sp": "大龙", "hz": "你看！那边围了那么多人，是不是出事了？", "py": "Nǐ kàn! Nàbiān wéile nàme duō rén, shì bu shì chū shì le?"}, {"sp": "小丽", "hz": "别担心，他们在看下棋呢。", "py": "Bié dānxīn, tāmen zài kàn xià qí ne."}, {"sp": "大龙", "hz": "在街边下棋？真好玩儿，在美国别说在街边坐着下棋，就是走路的人都很少。", "py": "Zài jiē biān xià qí? Zhēn hǎowánr, zài Měiguó biéshuō zài jiē biān zuòzhe xià qí, jiùshì zǒu lù de rén dōu hěn shǎo."}, {"sp": "小丽", "hz": "走，去看看吧。让你体验一下中国人的娱乐生活。", "py": "Zǒu, qù kànkan ba. Ràng nǐ tǐyàn yíxià Zhōngguórén de yúlè shēnghuó."}, {"sp": "大龙", "hz": "正好！检验一下你爸爸教我的成果。", "py": "Zhènghǎo! Jiǎnyàn yíxià nǐ bàba jiāo wǒ de chéngguǒ."}, {"sp": "（看完棋，继续走）", "hz": "", "py": "(Kànwán qí, jìxù zǒu)"}, {"sp": "大龙", "hz": "刚才你为什么拦着我啊？我告诉他他就赢了！真可惜，他差点儿就赢了。", "py": "Gāngcái nǐ wèi shénme lánzhe wǒ a? Wǒ gàosu tā tā jiù yíng le! Zhēn kěxī, tā chàdiǎnr jiù yíng le."}, {"sp": "小丽", "hz": "中国有句俗话：观棋不语真君子。意思是看别人下棋时不能支招儿。", "py": "Zhōngguó yǒu jù súhuà: guān qí bù yǔ zhēn jūnzǐ. Yìsi shì kàn biérén xià qí shí bù néng zhī zhāor."}, {"sp": "大龙", "hz": "我说呢！有一次你爸爸和我下象棋，妈妈在旁边支招儿，你爸特生气。", "py": "Wǒ shuō ne! Yǒu yí cì nǐ bàba hé wǒ xià xiàngqí, māma zài pángbiān zhī zhāor, nǐ bà tè shēngqì."}, {"sp": "小丽", "hz": "大龙！你看，那边跳广场舞呢。多热闹！", "py": "Dàlóng! Nǐ kàn, nàbiān tiào guǎngchǎngwǔ ne. Duō rènao!"}, {"sp": "……", "hz": "", "py": ""}, {"sp": "小丽", "hz": "广场舞看起来还挺有意思的。", "py": "Guǎngchǎngwǔ kànqilai hái tǐng yǒu yìsi de."}, {"sp": "大龙", "hz": "和我们平时在健身房锻炼的感觉完全不一样。", "py": "Hé wǒmen píngshí zài jiànshēnfáng duànliàn de gǎnjué wánquán bù yíyàng."}, {"sp": "小丽", "hz": "对了，这个周末你有空吗？咱们去欢乐谷玩儿怎么样？上个周末一直在加班，一点儿空闲时间都没有。这周末去放松放松。", "py": "Duìle, zhège zhōumò nǐ yǒu kòng ma? Zánmen qù Huānlè Gǔ wár zěnmeyàng? Shàng ge zhōumò yìzhí zài jiābān, yìdiǎnr kòngxián shíjiān dōu méiyǒu. Zhè zhōumò qù fàngsōng fàngsōng."}, {"sp": "大龙", "hz": "好啊！我最喜欢玩儿过山车和激流勇进了，既惊险又刺激！", "py": "Hǎo a! Wǒ zuì xǐhuan wánr guòshānchē hé jīliú yǒngjìn le, jì jīngxiǎn yòu cìjī!"}], "scenarios": [{"title": "场景1：周末在公园", "scenario": "A是刚来中国的留学生，B是中国朋友。两人聊周末休闲生活。任务：B介绍一个中国特色休闲活动，A问3个问题。", "aq": ["你周末一般做什么？", "你听说过广场舞、太极拳、下棋或茶馆吗？", "你最想推荐我试哪个？为什么？", "这个活动在哪里？什么时候去最好？"], "bq": ["你们国家周末流行做什么？", "你喜欢安静的休闲活动还是热闹的？", "你想不想试试中国的公园晨练？"], "ext": ["中国的休闲活动和你们国家有什么不同？", "和看电影比，为什么你更喜欢这个活动？", "如果我第一次去，要注意什么？"]}, {"title": "场景2：邀请朋友一起休闲", "scenario": "A想邀请B周末去茶馆/书法体验课/公园晨练。任务：完成“邀请—接受或拒绝—改时间/换活动”的对话。", "aq": ["这周末你有空吗？", "你想不想和我一起去……？", "我们几点、在哪里见？", "要带什么东西吗？", "如果你不喜欢，我们可以换什么活动？"], "bq": ["我有空/没空，因为……", "我对……很感兴趣/不太感兴趣。", "能不能换一个时间？", "这个地方远不远？怎么去？"], "ext": ["你为什么推荐这个活动？", "如果下雨，我们还可以做什么？", "你觉得这个活动适合几个人一起去？"]}]}, {"id": 2, "title": "谈时尚", "subtitle": "Talking about Fashion", "vocab": [{"hz": "美发", "py": "měifà", "pos": "动", "en": "to do a hairdressing"}, {"hz": "美发店", "py": "měifàdiàn", "pos": "—", "en": "hair salon"}, {"hz": "发型", "py": "fàxíng", "pos": "名", "en": "hairstyle"}, {"hz": "时尚", "py": "shíshàng", "pos": "形/名", "en": "fashionable; fashion"}, {"hz": "干练", "py": "gànliàn", "pos": "形", "en": "capable and experienced"}, {"hz": "流行", "py": "liúxíng", "pos": "动", "en": "to be popular"}, {"hz": "烫发", "py": "tàngfà", "pos": "动", "en": "to perm"}, {"hz": "再说", "py": "zàishuō", "pos": "连", "en": "moreover, besides"}, {"hz": "损伤", "py": "sǔnshāng", "pos": "动", "en": "to damage"}, {"hz": "道理", "py": "dàolǐ", "pos": "名", "en": "reason"}, {"hz": "剪发", "py": "jiǎnfà", "pos": "动", "en": "to have (one's hair) cut"}, {"hz": "理发", "py": "lǐfà", "pos": "动", "en": "to have a haircut"}, {"hz": "刘海儿", "py": "liúhǎir", "pos": "名", "en": "bang"}, {"hz": "储值卡", "py": "chǔzhíkǎ", "pos": "名", "en": "value card"}, {"hz": "发型师", "py": "fàxíngshī", "pos": "名", "en": "hairdresser"}, {"hz": "手艺", "py": "shǒuyì", "pos": "名", "en": "workmanship"}, {"hz": "前卫", "py": "qiánwèi", "pos": "形", "en": "avant garde"}, {"hz": "发质", "py": "fàzhì", "pos": "名", "en": "hair quality"}, {"hz": "硬", "py": "yìng", "pos": "形", "en": "hard, wiry"}, {"hz": "趋势", "py": "qūshì", "pos": "名", "en": "trend"}, {"hz": "追", "py": "zhuī", "pos": "动", "en": "to pursue"}, {"hz": "时髦", "py": "shímáo", "pos": "形", "en": "voguish"}, {"hz": "经典", "py": "jīngdiǎn", "pos": "名/形", "en": "classic; classical"}, {"hz": "搭配", "py": "dāpèi", "pos": "动", "en": "to match"}, {"hz": "过时", "py": "guòshí", "pos": "形", "en": "outdated"}, {"hz": "形象", "py": "xíngxiàng", "pos": "名", "en": "image"}, {"hz": "顾问", "py": "gùwèn", "pos": "名", "en": "consultant"}], "quiz": [{"hanzi": "美发", "correct": "měifà", "options": ["měifà", "mēifà", "méifā", "měifā"], "en": "to do a hairdressing"}, {"hanzi": "美发店", "correct": "měifàdiàn", "options": ["měifàdiān", "měifàdiàn", "měifàdiǎn", "mēifàdiàn"], "en": "hair salon"}, {"hanzi": "发型", "correct": "fàxíng", "options": ["fàxǐng", "fàxíng", "fàxīng", "fáxíng"], "en": "hairstyle"}, {"hanzi": "时尚", "correct": "shíshàng", "options": ["shìsháng", "shīshǎng", "shīshàng", "shíshàng"], "en": "fashionable; fashion"}, {"hanzi": "干练", "correct": "gànliàn", "options": ["gánliàn", "gànliàn", "gánlián", "gānliàn"], "en": "capable and experienced"}, {"hanzi": "流行", "correct": "liúxíng", "options": ["liúxīng", "liúxìng", "liǔxīng", "liúxíng"], "en": "to be popular"}, {"hanzi": "烫发", "correct": "tàngfà", "options": ["tàngfá", "tàngfǎ", "tàngfà", "tàngfā"], "en": "to perm"}, {"hanzi": "再说", "correct": "zàishuō", "options": ["zàishuō", "zàishuó", "zàishuò", "zàishuǒ"], "en": "moreover, besides"}, {"hanzi": "损伤", "correct": "sǔnshāng", "options": ["sǔnshāng", "súnshàng", "sǔnshǎng", "súnshāng"], "en": "to damage"}, {"hanzi": "道理", "correct": "dàolǐ", "options": ["dāolì", "dāolǐ", "dàolǐ", "dáolì"], "en": "reason"}, {"hanzi": "剪发", "correct": "jiǎnfà", "options": ["jiǎnfà", "jiǎnfá", "jiǎnfǎ", "jiānfà"], "en": "to have (one's hair) cut"}, {"hanzi": "理发", "correct": "lǐfà", "options": ["lìfā", "lífà", "lǐfà", "lìfà"], "en": "to have a haircut"}, {"hanzi": "刘海儿", "correct": "liúhǎir", "options": ["liùhàir", "liúhǎir", "liúhāir", "liǔhàir"], "en": "bang"}, {"hanzi": "储值卡", "correct": "chǔzhíkǎ", "options": ["chǔzhíkā", "chǔzhǐkǎ", "chǔzhíkǎ", "chǔzhíká"], "en": "value card"}, {"hanzi": "发型师", "correct": "fàxíngshī", "options": ["fāxíngshì", "fàxǐngshī", "fàxíngshī", "fàxíngshǐ"], "en": "hairdresser"}, {"hanzi": "手艺", "correct": "shǒuyì", "options": ["shóuyí", "shǒuyì", "shóuyǐ", "shōuyí"], "en": "workmanship"}, {"hanzi": "前卫", "correct": "qiánwèi", "options": ["qiǎnwěi", "qiānwěi", "qiánwèi", "qiànwèi"], "en": "avant garde"}, {"hanzi": "发质", "correct": "fàzhì", "options": ["fázhí", "fàzhì", "fázhì", "fàzhí"], "en": "hair quality"}, {"hanzi": "硬", "correct": "yìng", "options": ["yǐng", "yíng", "yīng", "yìng"], "en": "hard, wiry"}, {"hanzi": "趋势", "correct": "qūshì", "options": ["qūshì", "qūshí", "qùshì", "qūshǐ"], "en": "trend"}, {"hanzi": "追", "correct": "zhuī", "options": ["zhuī", "zhuǐ", "zhuì", "zhuí"], "en": "to pursue"}, {"hanzi": "时髦", "correct": "shímáo", "options": ["shímáo", "shímāo", "shímǎo", "shìmào"], "en": "voguish"}, {"hanzi": "经典", "correct": "jīngdiǎn", "options": ["jǐngdiǎn", "jīngdiǎn", "jīngdiàn", "jīngdián"], "en": "classic; classical"}, {"hanzi": "搭配", "correct": "dāpèi", "options": ["dǎpěi", "dāpèi", "dǎpēi", "dápèi"], "en": "to match"}, {"hanzi": "过时", "correct": "guòshí", "options": ["guòshǐ", "guōshǐ", "guòshì", "guòshí"], "en": "outdated"}, {"hanzi": "形象", "correct": "xíngxiàng", "options": ["xīngxiāng", "xìngxiàng", "xíngxiàng", "xīngxiàng"], "en": "image"}, {"hanzi": "顾问", "correct": "gùwèn", "options": ["gùwèn", "gùwěn", "gùwēn", "gùwén"], "en": "consultant"}], "dialogue": [{"sp": "小丽", "hz": "看什么呢？这么入迷？", "py": "Kàn shénme ne? Zhème rù mí?"}, {"sp": "大龙", "hz": "最新的时尚杂志。上面说今年特流行这个发型，你觉得适合我吗？", "py": "Zuì xīn de shíshàng zázhì. Shàngmiàn shuō jīnnián tè liúxíng zhège fàxíng, nǐ juéde shìhé wǒ ma?"}, {"sp": "小丽", "hz": "这个发型不错，既时尚又干练，可是不太适合你。再说这得烫发吧？对头发损伤多大啊！", "py": "Zhège fàxíng búcuò, jì shíshàng yòu gànliàn, kěshì bú tài shìhé nǐ. Zàishuō zhè děi tàng fà ba? Duì tóufa sǔnshāng duō dà a!"}, {"sp": "大龙", "hz": "有道理！唉，看来流行的不一定是适合自己的。", "py": "Yǒu dàolǐ! Ài, kànlái liúxíng de bù yídìng shì shìhé zìjǐ de."}, {"sp": "小丽", "hz": "我觉得这个发型很适合你。刘海儿很漂亮。", "py": "Wǒ juéde zhège fàxíng hěn shìhé nǐ. Liúhǎir hěn piàoliang."}, {"sp": "大龙", "hz": "嗯，听你的！明天陪我去剪头发好不好？", "py": "Ng, tīng nǐ de! Míngtiān péi wǒ qù jiǎn tóufa hǎo bu hǎo?"}, {"sp": "小丽", "hz": "没问题，我也正好想去理个发呢。", "py": "Méi wèntí, wǒ yě zhènghǎo xiǎng qù lǐ ge fà ne."}, {"sp": "大龙", "hz": "我们可以去小区东边的时尚美发店。我办了那里的储值卡。那儿有一个发型师手艺特别好。我让他给你理个像这样前卫的发型，怎么样？", "py": "Wǒmen kěyǐ qù xiǎoqū dōngbiān de shíshàng měifàdiàn. Wǒ bànle nàli de chǔzhíkǎ. Nàr yǒu yí ge fàxíngshī shǒuyì tèbié hǎo. Wǒ ràng tā gěi nǐ lǐ ge xiàng zhèyàng qiánwèi de fàxíng, zěnmeyàng?"}, {"sp": "小丽", "hz": "哎呀不行，我的发质太硬，我就理个利索点儿短一点儿的就行了。", "py": "Āiyā bùxíng, wǒ de fàzhì tài yìng, wǒ jiù lǐ ge lìsuo diǎnr duǎn yìdiǎnr de jiù xíng le."}, {"sp": "大龙", "hz": "就这么定了！明天理完发我还想去买几件衣服呢。你知道今年的服装流行趋势吗？昨天我看电视上说：黄色是今年的流行色。我最喜欢这种黄色了，搭配白色裙子一定很漂亮。你觉得呢？", "py": "Jiù zhème dìng le! Míngtiān lǐ wán fà wǒ hái xiǎng qù mǎi jǐ jiàn yīfu ne. Nǐ zhīdào jīnnián de fúzhuāng liúxíng qūshì ma? Zuótiān wǒ kàn diànshì shang shuō: huángsè shì jīnnián de liúxíng sè. Wǒ zuì xǐhuan zhè zhǒng huángsè le, dāpèi báisè qúnzi yídìng hěn piàoliang. Nǐ juéde ne?"}, {"sp": "小丽", "hz": "你们女生就喜欢追时髦。我还是更喜欢黑色和白色，经典永远不过时。", "py": "Nǐmen nǚshēng jiù xǐhuan zhuī shímáo. Wǒ háishi gèng xǐhuan hēisè hé báisè, jīngdiǎn yǒngyuǎn bú guò shí."}, {"sp": "大龙", "hz": "虽说黑色和白色经典不过时，可是你也不能总穿这两个颜色啊。", "py": "Suīshuō hēisè hé báisè jīngdiǎn bú guò shí, kěshì nǐ yě bù néng zǒng chuān zhè liǎng ge yánsè a."}, {"sp": "小丽", "hz": "也是，那你说哪个颜色适合我？", "py": "Yě shì, nà nǐ shuō nǎge yánsè shìhé wǒ?"}, {"sp": "大龙", "hz": "你皮肤白，这种亮蓝色很漂亮。穿在你身上一定很帅。", "py": "Nǐ pífū bái, zhè zhǒng liàng lánsè hěn piàoliang. Chuān zài nǐ shēnshang yídìng hěn shuài."}, {"sp": "小丽", "hz": "看起来还真不错。你就是我的形象顾问。", "py": "Kànqilai hái zhēn búcuò. Nǐ jiù shì wǒ de xíngxiàng gùwèn."}], "scenarios": [{"title": "场景1：在理发店", "scenario": "A想换发型，B是理发师或朋友，给A建议。输出任务：A描述想要的发型，B给建议并说明原因。", "aq": ["你觉得我剪短发好看吗？", "最近流行什么发型？", "这个颜色适合我的脸吗？", "如果我不喜欢，可以再改吗？"], "bq": ["你想剪什么样的发型？", "你喜欢长发还是短发？", "你想不想换颜色？", "你平时怎么整理头发？", "这个发型适不适合你，为什么？"], "ext": ["为什么这个发型适合我？", "这个发型和现在我的发型比，有什么不同？", "如果我想看起来更年轻/更专业，你建议什么发型？"]}, {"title": "场景2：参加聚会前选衣服", "scenario": "A和B要去参加聚会，讨论穿什么、最近流行什么。任务：描述衣着并给搭配建议。", "aq": ["你平时喜欢穿什么衣服？", "你觉得今年流行什么颜色和款式？", "这件衣服怎么样？大小合适吗？", "我穿这件去聚会可以吗？", "配什么鞋比较好？"], "bq": ["你喜欢舒服的衣服还是好看的衣服？", "你觉得这件贵不贵？", "你们国家现在流行什么？", "你为什么不选另一件？"], "ext": ["这两件衣服你更喜欢哪一件？为什么？", "为什么这种款式现在很流行？", "如果聚会很正式，你会怎么穿？"]}]}, {"id": 3, "title": "售后服务", "subtitle": "After-sale Services", "vocab": [{"hz": "台灯", "py": "táidēng", "pos": "名", "en": "desk lamp, table lamp"}, {"hz": "发票", "py": "fāpiào", "pos": "名", "en": "invoice"}, {"hz": "小票", "py": "xiǎopiào", "pos": "名", "en": "receipt"}, {"hz": "毛病", "py": "máobìng", "pos": "名", "en": "illness, defect, trouble"}, {"hz": "产品", "py": "chǎnpǐn", "pos": "名", "en": "product"}, {"hz": "条件", "py": "tiáojiàn", "pos": "名", "en": "condition"}, {"hz": "货", "py": "huò", "pos": "名", "en": "goods, commodity"}, {"hz": "不便", "py": "búbiàn", "pos": "形", "en": "inconvenient"}, {"hz": "抱歉", "py": "bàoqiàn", "pos": "形", "en": "sorry, apologetic"}, {"hz": "满意", "py": "mǎnyì", "pos": "动", "en": "to be satisfied"}, {"hz": "坏", "py": "huài", "pos": "动/形", "en": "to go bad; bad"}, {"hz": "出", "py": "chū", "pos": "动", "en": "to arise"}, {"hz": "怀疑", "py": "huáiyí", "pos": "动", "en": "to suspect, to doubt"}, {"hz": "修理", "py": "xiūlǐ", "pos": "动", "en": "to repair, to fix"}, {"hz": "用", "py": "yòng", "pos": "动", "en": "to use"}, {"hz": "敢", "py": "gǎn", "pos": "动", "en": "to dare"}, {"hz": "保证", "py": "bǎozhèng", "pos": "动", "en": "to ensure, to guarantee"}, {"hz": "承诺", "py": "chéngnuò", "pos": "动", "en": "to promise"}, {"hz": "无", "py": "wú", "pos": "动", "en": "not to have"}, {"hz": "退", "py": "tuì", "pos": "动", "en": "to return"}, {"hz": "登记", "py": "dēngjì", "pos": "动", "en": "to register"}, {"hz": "感到", "py": "gǎndào", "pos": "动", "en": "to feel, to sense"}, {"hz": "突然", "py": "tūrán", "pos": "形", "en": "sudden"}, {"hz": "即便", "py": "jíbiàn", "pos": "连", "en": "even if, even though"}, {"hz": "要不然", "py": "yàobúrán", "pos": "连", "en": "otherwise"}, {"hz": "之内", "py": "zhīnèi", "pos": "名", "en": "in, within"}, {"hz": "售后服务", "py": "shòuhòufúwù", "pos": "—", "en": "after-sale service"}], "quiz": [{"hanzi": "台灯", "correct": "táidēng", "options": ["táidēng", "tāidēng", "tǎiděng", "tǎidēng"], "en": "desk lamp, table lamp"}, {"hanzi": "发票", "correct": "fāpiào", "options": ["fápiào", "fāpiáo", "fǎpiáo", "fāpiào"], "en": "invoice"}, {"hanzi": "小票", "correct": "xiǎopiào", "options": ["xiāopiào", "xiǎopiào", "xiáopiào", "xiǎopiáo"], "en": "receipt"}, {"hanzi": "毛病", "correct": "máobìng", "options": ["mǎobìng", "máobīng", "máobìng", "máobǐng"], "en": "illness, defect, trouble"}, {"hanzi": "产品", "correct": "chǎnpǐn", "options": ["chǎnpīn", "chǎnpǐn", "chǎnpìn", "chànpín"], "en": "product"}, {"hanzi": "条件", "correct": "tiáojiàn", "options": ["tiàojiàn", "tiáojiǎn", "tiáojiān", "tiáojiàn"], "en": "condition"}, {"hanzi": "货", "correct": "huò", "options": ["huō", "huó", "huǒ", "huò"], "en": "goods, commodity"}, {"hanzi": "不便", "correct": "búbiàn", "options": ["búbiān", "búbián", "bǔbiǎn", "búbiàn"], "en": "inconvenient"}, {"hanzi": "抱歉", "correct": "bàoqiàn", "options": ["bàoqiàn", "bàoqiǎn", "báoqiǎn", "bǎoqiān"], "en": "sorry, apologetic"}, {"hanzi": "满意", "correct": "mǎnyì", "options": ["mányì", "mǎnyī", "mǎnyì", "mànyǐ"], "en": "to be satisfied"}, {"hanzi": "坏", "correct": "huài", "options": ["huài", "huǎi", "huāi", "huái"], "en": "to go bad; bad"}, {"hanzi": "出", "correct": "chū", "options": ["chū", "chǔ", "chú", "chù"], "en": "to arise"}, {"hanzi": "怀疑", "correct": "huáiyí", "options": ["huáiyì", "huàiyí", "huáiyí", "huāiyì"], "en": "to suspect, to doubt"}, {"hanzi": "修理", "correct": "xiūlǐ", "options": ["xiūlǐ", "xiǔlǐ", "xiǔlī", "xiúlǐ"], "en": "to repair, to fix"}, {"hanzi": "用", "correct": "yòng", "options": ["yōng", "yóng", "yòng", "yǒng"], "en": "to use"}, {"hanzi": "敢", "correct": "gǎn", "options": ["gǎn", "gán", "gàn", "gān"], "en": "to dare"}, {"hanzi": "保证", "correct": "bǎozhèng", "options": ["bǎozhèng", "bǎozhéng", "bàozhěng", "bǎozhēng"], "en": "to ensure, to guarantee"}, {"hanzi": "承诺", "correct": "chéngnuò", "options": ["chèngnuō", "chěngnuò", "chèngnuò", "chéngnuò"], "en": "to promise"}, {"hanzi": "无", "correct": "wú", "options": ["wú", "wù", "wū", "wǔ"], "en": "not to have"}, {"hanzi": "退", "correct": "tuì", "options": ["tuí", "tuǐ", "tuī", "tuì"], "en": "to return"}, {"hanzi": "登记", "correct": "dēngjì", "options": ["dēngjǐ", "dēngjì", "dēngjī", "dèngjì"], "en": "to register"}, {"hanzi": "感到", "correct": "gǎndào", "options": ["gāndào", "gǎndào", "gǎndǎo", "gǎndāo"], "en": "to feel, to sense"}, {"hanzi": "突然", "correct": "tūrán", "options": ["tūrǎn", "tūrán", "tūràn", "tùrán"], "en": "sudden"}, {"hanzi": "即便", "correct": "jíbiàn", "options": ["jíbiàn", "jìbiān", "jībiǎn", "jǐbiàn"], "en": "even if, even though"}, {"hanzi": "要不然", "correct": "yàobúrán", "options": ["yáobúrán", "yàobǔrán", "yàobúrān", "yàobúrán"], "en": "otherwise"}, {"hanzi": "之内", "correct": "zhīnèi", "options": ["zhīnèi", "zhīnēi", "zhínèi", "zhìnèi"], "en": "in, within"}, {"hanzi": "售后服务", "correct": "shòuhòufúwù", "options": ["shǒuhòufúwù", "shòuhǒufúwù", "shòuhòufúwù", "shòuhōufúwù"], "en": "after-sale service"}], "dialogue": [{"sp": "大龙", "hz": "您好！上周日我在这儿买了个台灯，昨天晚上突然坏了。", "py": "Nín hǎo! Shàng zhōurì wǒ zài zhèr mǎile ge táidēng, zuótiān wǎnshang tūrán huài le."}, {"sp": "服务员", "hz": "您带来了吗？我看一下。", "py": "Nín dàilai le ma? Wǒ kàn yíxià."}, {"sp": "大龙", "hz": "给，不知道是哪儿出了毛病。", "py": "Gěi, bù zhīdào shì nǎr chūle máobìng."}, {"sp": "服务员", "hz": "您是希望我们给您修理一下，还是换个新的？", "py": "Nín shì xīwàng wǒmen gěi nín xiūlǐ yíxià, háishi huàn ge xīn de?"}, {"sp": "大龙", "hz": "我怀疑这种灯质量有问题，即便换了新的，还是用不住。", "py": "Wǒ huáiyí zhè zhǒng dēng zhìliàng yǒu wèntí, jíbiàn huànle xīn de, háishi yòng bu zhù."}, {"sp": "服务员", "hz": "不会的，我们超市的产品质量是有保证的，要不然我们也不敢承诺七天之内无条件退换。", "py": "Bú huì de, wǒmen chāoshì de chǎnpǐn zhìliàng shì yǒu bǎozhèng de, yàobùrán wǒmen yě bù gǎn chéngnuò qī tiān zhī nèi wú tiáojiàn tuìhuàn."}, {"sp": "大龙", "hz": "那我要求退货，可以吗？", "py": "Nà wǒ yāoqiú tuì huò, kěyǐ ma?"}, {"sp": "服务员", "hz": "当然可以。您带发票了吗？", "py": "Dāngrán kěyǐ. Nín dài fāpiào le ma?"}, {"sp": "大龙", "hz": "我没有发票，这是我的购物小票。", "py": "Wǒ méiyǒu fāpiào, zhè shì wǒ de gòuwù xiǎopiào."}, {"sp": "服务员", "hz": "请您在这儿登记一下。", "py": "Qǐng nín zài zhèr dēngjì yíxià."}, {"sp": "大龙", "hz": "填好了，给您。", "py": "Tián hǎo le, gěi nín."}, {"sp": "服务员", "hz": "给您钱。对我们给您带来的不便，我感到很抱歉。", "py": "Gěi nín qián. Duì wǒmen gěi nín dàilai de búbiàn, wǒ gǎndào hěn bàoqiàn."}, {"sp": "大龙", "hz": "没关系，这也不是你的错。", "py": "Méi guānxi, zhè yě bú shì nǐ de cuò."}, {"sp": "服务员", "hz": "谢谢您的理解。", "py": "Xièxie nín de lǐjiě."}, {"sp": "大龙", "hz": "我对你们的台灯不满意，但对你们的售后服务还是很满意的。", "py": "Wǒ duì nǐmen de táidēng bù mǎnyì, dàn duì nǐmen de shòuhòu fúwù háishi hěn mǎnyì de."}], "scenarios": [{"title": "场景1：在商店退换鞋", "scenario": "A买了一双鞋，尺码不合适/质量有问题，去找店员B退换。任务：说明退换原因，提出要求。", "aq": ["这双鞋我可以退吗？", "如果不能退，可以换吗？", "需要多长时间？", "可以退钱还是只能换东西？"], "bq": ["您好，请问有什么可以帮您？", "您为什么要退/换？", "您买了几天了？", "您有小票吗？", "您想退货还是换货？", "您想换什么尺码/颜色？"], "ext": ["根据规定，什么情况可以退换？", "如果你们没有我的尺码，怎么办？", "能不能帮我问一下经理？"]}, {"title": "场景2：网购客服", "scenario": "A收到网购的衣服，颜色不对/有质量问题，联系客服B。输出任务：完成在线或电话客服对话。", "aq": ["我收到的衣服颜色不对。", "这里有一个小问题，我可以发照片给您。", "我想换货，可以吗？", "运费谁付？", "多久能处理完？"], "bq": ["请告诉我您的订单号。", "商品有什么问题？", "您拍照了吗？", "您想退款还是换货？", "您希望我们怎么处理？"], "ext": ["我希望换货，因为……", "请告诉我处理时间和步骤。", "如果换货没有货，我能不能退款？"]}]}, {"id": 4, "title": "祝贺", "subtitle": "Congratulations", "vocab": [{"hz": "决赛", "py": "juésài", "pos": "名", "en": "finals, final match"}, {"hz": "冠军", "py": "guànjūn", "pos": "名", "en": "champion"}, {"hz": "运气", "py": "yùnqi", "pos": "名", "en": "luck"}, {"hz": "实力", "py": "shílì", "pos": "名", "en": "strength"}, {"hz": "奖金", "py": "jiǎngjīn", "pos": "名", "en": "money award, bonus"}, {"hz": "祝贺", "py": "zhùhè", "pos": "动", "en": "to congratulate"}, {"hz": "过奖", "py": "guòjiǎng", "pos": "动", "en": "to overpraise"}, {"hz": "庆祝", "py": "qìngzhù", "pos": "动", "en": "to celebrate"}, {"hz": "值得", "py": "zhídé", "pos": "动", "en": "to be worth, to deserve"}, {"hz": "聚", "py": "jù", "pos": "动", "en": "to get together"}, {"hz": "忘", "py": "wàng", "pos": "动", "en": "to forget"}, {"hz": "买单", "py": "mǎidān", "pos": "动", "en": "to pay the bill"}, {"hz": "变", "py": "biàn", "pos": "动", "en": "to become, to change"}, {"hz": "求婚", "py": "qiúhūn", "pos": "动", "en": "to propose marriage"}, {"hz": "同意", "py": "tóngyì", "pos": "动", "en": "to agree"}, {"hz": "嫁", "py": "jià", "pos": "动", "en": "(of a woman) to marry"}, {"hz": "了不起", "py": "liǎobuqǐ", "pos": "形", "en": "amazing, extraordinary"}, {"hz": "谦虚", "py": "qiānxū", "pos": "形", "en": "modest"}, {"hz": "强", "py": "qiáng", "pos": "形", "en": "strong, better"}, {"hz": "客气", "py": "kèqi", "pos": "形", "en": "courteous, polite"}, {"hz": "开心", "py": "kāixīn", "pos": "形", "en": "happy, joyful"}, {"hz": "总", "py": "zǒng", "pos": "形/副", "en": "general, chief; overall"}, {"hz": "只是", "py": "zhǐshì", "pos": "副", "en": "only"}, {"hz": "其实", "py": "qíshí", "pos": "副", "en": "actually, in fact"}, {"hz": "明明", "py": "míngmíng", "pos": "副", "en": "obviously"}, {"hz": "别", "py": "bié", "pos": "副", "en": "do not"}, {"hz": "向", "py": "xiàng", "pos": "介", "en": "towards"}, {"hz": "罢了", "py": "bàle", "pos": "助", "en": "just"}, {"hz": "怪不得", "py": "guàibude", "pos": "副", "en": "no wonder, so that's why"}, {"hz": "双喜临门", "py": "shuāngxǐlínmén", "pos": "—", "en": "two happy events come one after the other"}], "quiz": [{"hanzi": "决赛", "correct": "juésài", "options": ["juěsài", "juésài", "juěsái", "juēsài"], "en": "finals, final match"}, {"hanzi": "冠军", "correct": "guànjūn", "options": ["guànjùn", "guánjūn", "guànjūn", "guǎnjǔn"], "en": "champion"}, {"hanzi": "运气", "correct": "yùnqi", "options": ["yǔnqi", "yūnqi", "yùnqi", "yúnqi"], "en": "luck"}, {"hanzi": "实力", "correct": "shílì", "options": ["shílí", "shǐlí", "shílì", "shílī"], "en": "strength"}, {"hanzi": "奖金", "correct": "jiǎngjīn", "options": ["jiǎngjìn", "jiǎngjín", "jiángjīn", "jiǎngjīn"], "en": "money award, bonus"}, {"hanzi": "祝贺", "correct": "zhùhè", "options": ["zhúhě", "zhǔhé", "zhùhè", "zhǔhè"], "en": "to congratulate"}, {"hanzi": "过奖", "correct": "guòjiǎng", "options": ["guòjiàng", "guòjiāng", "guòjiáng", "guòjiǎng"], "en": "to overpraise"}, {"hanzi": "庆祝", "correct": "qìngzhù", "options": ["qǐngzhù", "qìngzhù", "qǐngzhǔ", "qìngzhú"], "en": "to celebrate"}, {"hanzi": "值得", "correct": "zhídé", "options": ["zhídè", "zhìdé", "zhīdé", "zhídé"], "en": "to be worth, to deserve"}, {"hanzi": "聚", "correct": "jù", "options": ["jú", "jù", "jū", "jǔ"], "en": "to get together"}, {"hanzi": "忘", "correct": "wàng", "options": ["wáng", "wāng", "wàng", "wǎng"], "en": "to forget"}, {"hanzi": "买单", "correct": "mǎidān", "options": ["mǎidān", "māidǎn", "mǎidán", "màidǎn"], "en": "to pay the bill"}, {"hanzi": "变", "correct": "biàn", "options": ["biǎn", "biān", "bián", "biàn"], "en": "to become, to change"}, {"hanzi": "求婚", "correct": "qiúhūn", "options": ["qiùhūn", "qiǔhūn", "qiūhūn", "qiúhūn"], "en": "to propose marriage"}, {"hanzi": "同意", "correct": "tóngyì", "options": ["tóngyì", "tòngyì", "tòngyǐ", "tōngyì"], "en": "to agree"}, {"hanzi": "嫁", "correct": "jià", "options": ["jiā", "jiǎ", "jià", "jiá"], "en": "(of a woman) to marry"}, {"hanzi": "了不起", "correct": "liǎobuqǐ", "options": ["liǎobuqǐ", "liǎobuqí", "liǎobuqì", "liǎobuqī"], "en": "amazing, extraordinary"}, {"hanzi": "谦虚", "correct": "qiānxū", "options": ["qiānxū", "qiánxū", "qiānxù", "qiǎnxū"], "en": "modest"}, {"hanzi": "强", "correct": "qiáng", "options": ["qiāng", "qiǎng", "qiáng", "qiàng"], "en": "strong, better"}, {"hanzi": "客气", "correct": "kèqi", "options": ["kěqi", "kēqi", "kèqi", "kéqi"], "en": "courteous, polite"}, {"hanzi": "开心", "correct": "kāixīn", "options": ["kāixìn", "kǎixīn", "kāixīn", "kàixīn"], "en": "happy, joyful"}, {"hanzi": "总", "correct": "zǒng", "options": ["zǒng", "zòng", "zóng", "zōng"], "en": "general, chief; overall"}, {"hanzi": "只是", "correct": "zhǐshì", "options": ["zhìshī", "zhǐshì", "zhìshǐ", "zhìshì"], "en": "only"}, {"hanzi": "其实", "correct": "qíshí", "options": ["qíshī", "qīshǐ", "qíshí", "qíshǐ"], "en": "actually, in fact"}, {"hanzi": "明明", "correct": "míngmíng", "options": ["míngmíng", "míngmǐng", "mīngmíng", "mìngmíng"], "en": "obviously"}, {"hanzi": "别", "correct": "bié", "options": ["biē", "biè", "biě", "bié"], "en": "do not"}, {"hanzi": "向", "correct": "xiàng", "options": ["xiǎng", "xiáng", "xiāng", "xiàng"], "en": "towards"}, {"hanzi": "罢了", "correct": "bàle", "options": ["bále", "bāle", "bàle", "bǎle"], "en": "just"}, {"hanzi": "怪不得", "correct": "guàibude", "options": ["guàibude", "guāibude", "guáibude", "guǎibude"], "en": "no wonder, so that's why"}, {"hanzi": "双喜临门", "correct": "shuāngxǐlínmén", "options": ["shuāngxǐlínmén", "shuāngxǐlīnmén", "shuángxǐlìnmén", "shuāngxǐlínměn"], "en": "two happy events come one after the other"}], "dialogue": [{"sp": "艾娜", "hz": "大龙，听说你星期天去参加“中文之星”比赛了，成绩怎么样？", "py": "Dàlóng, tīngshuō nǐ xīngqītiān qù cānjiā “Zhōngwén zhī Xīng” bǐsài le, chéngjì zěnmeyàng?"}, {"sp": "茉莉", "hz": "你还不知道吗？他是第一名，决赛的总冠军！", "py": "Nǐ hái bù zhīdào ma? Tā shì dì yī míng, juésài de zǒng guànjūn!"}, {"sp": "艾娜", "hz": "真的？大龙，你可真了不起！祝贺你！", "py": "Zhēn de? Dàlóng, nǐ kě zhēn liǎobuqǐ! Zhùhè nǐ!"}, {"sp": "大龙", "hz": "谢谢。其实我只是运气比较好罢了。", "py": "Xièxie. Qíshí wǒ zhǐshì yùnqi bǐjiào hǎo bàle."}, {"sp": "茉莉", "hz": "你太谦虚了。明明是实力强，哪儿是因为运气啊！", "py": "Nǐ tài qiānxū le. Míngmíng shì shílì qiáng, nǎr shì yīnwèi yùnqi a!"}, {"sp": "大龙", "hz": "哪里，哪里，你过奖了。", "py": "Nǎlǐ, nǎlǐ, nǐ guòjiǎng le."}, {"sp": "茉莉", "hz": "对了，艾娜，你周五晚上有空吗？咱们约上几个朋友，一起为大龙庆祝庆祝，怎么样？", "py": "Duìle, Àinà, nǐ zhōuwǔ wǎnshang yǒu kòng ma? Zánmen yuēshang jǐ ge péngyou, yìqǐ wèi Dàlóng qìngzhù qìngzhù, zěnmeyàng?"}, {"sp": "艾娜", "hz": "是该好好儿庆祝一下，我一定去。", "py": "Shì gāi hǎohāor qìngzhù yíxià, wǒ yídìng qù."}, {"sp": "大龙", "hz": "你们太客气了，其实没什么值得庆祝的。不过，大家一起聚聚挺好的。", "py": "Nǐmen tài kèqi le, qíshí méi shénme zhídé qìngzhù de. Búguò, dàjiā yìqǐ jùju tǐng hǎo de."}, {"sp": "茉莉", "hz": "我们可不跟你客气，到时候别忘了带上你的奖金给我们买单啊。", "py": "Wǒmen kě bù gēn nǐ kèqi, dào shíhou bié wàngle dàishang nǐ de jiǎngjīn gěi wǒmen mǎidān a."}, {"sp": "大龙", "hz": "买单可以，不过那个奖金你就别想了，昨天已经变成我女朋友的戒指了。", "py": "Mǎidān kěyǐ, búguò nàge jiǎngjīn nǐ jiù bié xiǎng le, zuótiān yǐjīng biànchéng wǒ nǚpéngyou de jièzhi le."}, {"sp": "茉莉", "hz": "戒指？……啊！你向小丽求婚了？", "py": "Jièzhi? …… À! Nǐ xiàng Xiǎolì qiú hūn le?"}, {"sp": "大龙", "hz": "对，她同意嫁给我了。", "py": "Duì, tā tóngyì jià gěi wǒ le."}, {"sp": "艾娜", "hz": "怪不得你今天这么开心，原来是双喜临门啊！", "py": "Guàibude nǐ jīntiān zhème kāixīn, yuánlái shì shuāngxǐ línmén a!"}], "scenarios": [{"title": "场景1：朋友有喜事", "scenario": "B结婚/生孩子/升职/毕业/搬家/考试通过。A向B表示祝贺。任务：祝贺 + 追问 + 表示愿意帮忙。", "aq": ["听说你……，是真的吗？", "恭喜你！什么时候的事？", "你现在感觉怎么样？", "你需要我帮忙吗？", "你们打算怎么庆祝？"], "bq": ["谢谢！我很开心。", "是上个月/昨天……", "我有一点紧张，但是很高兴。", "不用帮忙，谢谢你。"], "ext": ["真为你高兴！你是怎么做到的？", "这件事对你有什么特别的意义？", "我能帮你做点什么吗？"]}, {"title": "场景2：别人祝贺你", "scenario": "A告诉B自己通过HSK/找到工作/比赛获奖，B祝贺A，A恰当回应。任务：宣布喜事 + 接受祝贺 + 谦虚回应。", "aq": ["谢谢！我很开心。", "我准备了三个月。", "我还要继续学习。", "谢谢你的祝福，我也希望……"], "bq": ["听说你通过HSK了，是真的吗？", "恭喜你！你现在心情怎么样？", "你准备了多长时间？", "你接下来有什么计划？"], "ext": ["你觉得自己为什么能成功？", "你最想感谢谁？", "对正在准备考试的人，你有什么建议？"]}]}, {"id": 5, "title": "谈压力", "subtitle": "Talking about Pressure", "vocab": [{"hz": "钥匙", "py": "yàoshi", "pos": "名", "en": "key"}, {"hz": "状态", "py": "zhuàngtài", "pos": "名", "en": "state"}, {"hz": "脑子", "py": "nǎozi", "pos": "名", "en": "brain"}, {"hz": "丢三落四", "py": "diūsānlàsì", "pos": "—", "en": "forgetful"}, {"hz": "压力", "py": "yālì", "pos": "名", "en": "pressure"}, {"hz": "建议", "py": "jiànyì", "pos": "名/动", "en": "advice; to advise"}, {"hz": "省得", "py": "shěngde", "pos": "连", "en": "so as to save"}, {"hz": "丧气话", "py": "sàngqìhuà", "pos": "—", "en": "discouraging words"}, {"hz": "律师", "py": "lǜshī", "pos": "名", "en": "lawyer"}, {"hz": "安慰", "py": "ānwèi", "pos": "形/动", "en": "comforting; to comfort"}, {"hz": "不妨", "py": "bùfáng", "pos": "副", "en": "might as well"}, {"hz": "舒缓", "py": "shūhuǎn", "pos": "形", "en": "soothing"}, {"hz": "情绪", "py": "qíngxù", "pos": "名", "en": "emotion, sentiment"}, {"hz": "或许", "py": "huòxǔ", "pos": "副", "en": "maybe"}, {"hz": "劳逸结合", "py": "láoyìjiéhé", "pos": "—", "en": "to strike a proper balance between work and rest"}, {"hz": "出汗", "py": "chūhàn", "pos": "—", "en": "to sweat"}, {"hz": "记事本", "py": "jìshìběn", "pos": "名", "en": "notepad"}, {"hz": "结识", "py": "jiéshí", "pos": "动", "en": "to acquaint"}, {"hz": "逐一", "py": "zhúyī", "pos": "副", "en": "one by one"}, {"hz": "振作", "py": "zhènzuò", "pos": "动", "en": "to cheer up"}, {"hz": "减压", "py": "jiǎnyā", "pos": "动", "en": "to decompress"}, {"hz": "张弛有度", "py": "zhāngchíyǒudù", "pos": "—", "en": "balanced"}], "quiz": [{"hanzi": "钥匙", "correct": "yàoshi", "options": ["yǎoshi", "yáoshi", "yàoshi", "yāoshi"], "en": "key"}, {"hanzi": "状态", "correct": "zhuàngtài", "options": ["zhuàngtài", "zhuāngtái", "zhuàngtái", "zhuǎngtài"], "en": "state"}, {"hanzi": "脑子", "correct": "nǎozi", "options": ["nàozi", "nǎozi", "nāozi", "náozi"], "en": "brain"}, {"hanzi": "丢三落四", "correct": "diūsānlàsì", "options": ["diūsǎnlǎsì", "diūsānlǎsì", "diūsānlàsì", "diúsánlàsì"], "en": "forgetful"}, {"hanzi": "压力", "correct": "yālì", "options": ["yàlì", "yālì", "yālī", "yālǐ"], "en": "pressure"}, {"hanzi": "建议", "correct": "jiànyì", "options": ["jiànyí", "jiànyì", "jiànyī", "jiānyì"], "en": "advice; to advise"}, {"hanzi": "省得", "correct": "shěngde", "options": ["shèngde", "shěngde", "shēngde", "shéngde"], "en": "so as to save"}, {"hanzi": "丧气话", "correct": "sàngqìhuà", "options": ["sàngqìhuá", "sàngqìhuà", "sǎngqìhuà", "sàngqīhuà"], "en": "discouraging words"}, {"hanzi": "律师", "correct": "lǜshī", "options": ["lǜshī", "lǖshī", "lǚshì", "lǚshī"], "en": "lawyer"}, {"hanzi": "安慰", "correct": "ānwèi", "options": ["ǎnwéi", "ānwèi", "ánwéi", "ánwèi"], "en": "comforting; to comfort"}, {"hanzi": "不妨", "correct": "bùfáng", "options": ["bùfāng", "bùfáng", "búfáng", "bùfàng"], "en": "might as well"}, {"hanzi": "舒缓", "correct": "shūhuǎn", "options": ["shūhuān", "shúhuǎn", "shūhuǎn", "shūhuàn"], "en": "soothing"}, {"hanzi": "情绪", "correct": "qíngxù", "options": ["qīngxú", "qíngxǔ", "qíngxū", "qíngxù"], "en": "emotion, sentiment"}, {"hanzi": "或许", "correct": "huòxǔ", "options": ["huōxǔ", "huòxǔ", "huǒxǔ", "huòxù"], "en": "maybe"}, {"hanzi": "劳逸结合", "correct": "láoyìjiéhé", "options": ["láoyìjiéhē", "lǎoyìjiéhé", "láoyìjiěhé", "láoyìjiéhé"], "en": "to strike a proper balance between work and rest"}, {"hanzi": "出汗", "correct": "chūhàn", "options": ["chūhàn", "chùhǎn", "chūhān", "chúhàn"], "en": "to sweat"}, {"hanzi": "记事本", "correct": "jìshìběn", "options": ["jìshìběn", "jīshìběn", "jīshìbēn", "jìshìbén"], "en": "notepad"}, {"hanzi": "结识", "correct": "jiéshí", "options": ["jiěshí", "jiéshí", "jiěshī", "jiéshì"], "en": "to acquaint"}, {"hanzi": "逐一", "correct": "zhúyī", "options": ["zhǔyì", "zhùyī", "zhúyī", "zhúyí"], "en": "one by one"}, {"hanzi": "振作", "correct": "zhènzuò", "options": ["zhènzuò", "zhēnzuò", "zhènzuó", "zhěnzuō"], "en": "to cheer up"}, {"hanzi": "减压", "correct": "jiǎnyā", "options": ["jiǎnyā", "jiànyā", "jiányá", "jiǎnyà"], "en": "to decompress"}, {"hanzi": "张弛有度", "correct": "zhāngchíyǒudù", "options": ["zhāngchíyǒudū", "zhāngchíyǒudù", "zhāngchǐyǒudù", "zhāngchíyòudù"], "en": "balanced"}], "dialogue": [{"sp": "小丽", "hz": "你找什么呢？", "py": "Nǐ zhǎo shénme ne?"}, {"sp": "艾娜", "hz": "钥匙，我明明把钥匙放在包里了。现在怎么找不到了呢？", "py": "Yàoshi, wǒ míngmíng bǎ yàoshi fàng zài bāo li le. Xiànzài zěnme zhǎo bu dào le ne?"}, {"sp": "小丽", "hz": "桌子上的是不是？", "py": "Zhuōzi shang de shì bu shì?"}, {"sp": "艾娜", "hz": "对对对！终于找到了！唉，要考试了，可是这阵子状态特别不好。脑子空空的，什么都记不住，总丢三落四的。", "py": "Duì duì duì! Zhōngyú zhǎodào le! Ài, yào kǎo shì le, kěshì zhè zhènzi zhuàngtài tèbié bù hǎo. Nǎozi kōngkōng de, shénme dōu jì bu zhù, zǒng diūsān làsì de."}, {"sp": "小丽", "hz": "我最近压力也很大，刚工作。要适应陌生的环境、适应新的工作、结识新同事，总之所有的东西对我来说都是新的。你看，我把所有要做的事情都记在记事本上了。我建议你也准备个小本子，把该做的事情逐一记下来，省得忘。", "py": "Wǒ zuìjìn yālì yě hěn dà, gāng gōngzuò. Yào shìyìng mòshēng de huánjìng, shìyìng xīn de gōngzuò, jiéshí xīn tóngshì, zǒngzhī suǒyǒu de dōngxi duì wǒ lái shuō dōu shì xīn de. Nǐ kàn, wǒ bǎ suǒyǒu yào zuò de shìqing dōu jì zài jìshìběn shang le. Wǒ jiànyì nǐ yě zhǔnbèi ge xiǎo běnzi, bǎ gāi zuò de shìqing zhúyī jì xialai, shěngde wàng."}, {"sp": "艾娜", "hz": "唉，记了，可是我连记事本都丢了。早知道学法律这么难，我还不如选别的专业呢。", "py": "Ài, jìle, kěshì wǒ lián jìshìběn dōu diū le. Zǎo zhīdào xué fǎlǜ zhème nán, wǒ hái bùrú xuǎn bié de zhuānyè ne."}, {"sp": "小丽", "hz": "别说丧气话。当一名律师不是一直是你的理想吗？振作起来！加油吧，俗话说：有志者事竟成。", "py": "Bié shuō sàngqi huà. Dāng yì míng lǜshī bú shì yìzhí shì nǐ de lǐxiǎng ma? Zhènzuò qilai! Jiā yóu ba, súhuà shuō: yǒu zhì zhě shì jìng chéng."}, {"sp": "艾娜", "hz": "谢谢你安慰我。我最近真的很紧张。如果通不过考试，那我这三年都白学了。", "py": "Xièxie nǐ ānwèi wǒ. Wǒ zuìjìn zhēn de hěn jǐnzhāng. Rúguǒ tōng bu guò kǎoshì, nà wǒ zhè sān nián dōu bái xué le."}, {"sp": "小丽", "hz": "放轻松，别给自己太大压力。要学会给自己减压。最近你不妨多听听音乐，舒缓一下情绪。对了，一会儿和我一起去做瑜伽吧，放松一下心情，或许会好呢。", "py": "Fàng qīngsōng, bié gěi zìjǐ tài dà yālì. Yào xuéhuì gěi zìjǐ jiǎn yā. Zuìjìn nǐ bùfáng duō tīngting yīnyuè, shūhuǎn yíxià qíngxù. Duìle, yíhuìr hé wǒ yìqǐ qù zuò yújiā ba, fàngsōng yíxià xīnqíng, huòxǔ huì hǎo ne."}, {"sp": "艾娜", "hz": "我现在忙得不得了，哪有时间做瑜伽啊？", "py": "Wǒ xiànzài máng de bùdéliǎo, nǎ yǒu shíjiān zuò yújiā a?"}, {"sp": "小丽", "hz": "你要劳逸结合，张弛有度，走吧！", "py": "Nǐ yào láoyì jiéhé, zhāngchí yǒudù, zǒu ba!"}, {"sp": "艾娜", "hz": "好吧，反正我也什么都看不下去。", "py": "Hǎo ba, fǎnzhèng wǒ yě shénme dōu kàn bu xiàqu."}, {"sp": "（做完瑜伽）", "hz": "", "py": "(Zuòwán yújiā)"}], "scenarios": [{"title": "场景1：留学生最近压力大", "scenario": "A最近压力大，可能因为考试、想家、交朋友、钱或时间。B关心A并给建议。任务：描述压力 + 给两条建议。", "aq": ["我最近压力很大，因为……", "你觉得我应该怎么办？", "你有过这样的压力吗？", "我要不要跟老师/朋友说一说？"], "bq": ["你最近怎么样？看起来有点累。", "你的压力从哪里来？", "你睡得好吗？", "你试过什么办法？", "你最担心什么？"], "ext": ["如果我是你，我会先……再……", "你觉得哪个建议最有用？为什么？", "我们可以一起做什么来放松？"]}, {"title": "场景2：给朋友建议并约行动", "scenario": "B压力大，A安慰B、提供建议，并约定一起做一件事。任务：安慰 + 建议 + 约定时间。", "aq": ["你愿意说说你的压力吗？", "你最担心的是什么？", "你要不要和我一起去散步/运动/喝茶？", "你觉得这个建议有用吗？", "我们什么时候去？"], "bq": ["我担心……", "我愿意试试。", "这个建议不错，因为……", "我周六下午有空。"], "ext": ["虽然……，但是你可以……", "你可以先……，然后……", "如果还是压力大，我们可以找谁帮忙？"]}]}];
+
+let state = {
+  unit: 1,
+  mode: 'vocab',
+  showPinyin: false,
+  showDlgPinyin: true,
+  quiz: { idx: 0, score: 0, answered: false, order: [] },
+  sentenceCount: 0,
+  scenarioIdx: 0,
+};
+
+function getUnit(id) { return UNITS.find(u => u.id === id); }
+
+function loadMistakes() {
+  try { return JSON.parse(localStorage.getItem('kouyu_mistakes') || '[]'); }
+  catch(e) { return []; }
+}
+function saveMistakes(arr) {
+  try { localStorage.setItem('kouyu_mistakes', JSON.stringify(arr)); } catch(e) {}
+}
+function addMistake(item) {
+  let arr = loadMistakes();
+  if (!arr.find(m => m.hanzi === item.hanzi && m.unit === item.unit)) {
+    arr.push(item);
+    saveMistakes(arr);
+  }
+}
+function removeMistake(idx) {
+  let arr = loadMistakes();
+  arr.splice(idx, 1);
+  saveMistakes(arr);
+  render();
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderUnitTabs() {
+  const el = document.getElementById('unitTabs');
+  el.innerHTML = UNITS.map(u =>
+    `<div class="unit-tab ${u.id === state.unit ? 'active' : ''}" data-unit="${u.id}">Unit ${u.id}<br><span style="font-size:0.7em">${u.title}</span></div>`
+  ).join('');
+  el.querySelectorAll('.unit-tab').forEach(t => {
+    t.addEventListener('click', () => {
+      state.unit = parseInt(t.dataset.unit);
+      resetQuiz();
+      state.scenarioIdx = 0;
+      render();
+    });
+  });
+}
+
+function renderModeTabs() {
+  document.querySelectorAll('.mode-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.mode === state.mode);
+  });
+}
+
+function resetQuiz() {
+  const u = getUnit(state.unit);
+  state.quiz = { idx: 0, score: 0, answered: false, order: shuffle(u.quiz.map((_, i) => i)) };
+}
+
+function renderVocab() {
+  const u = getUnit(state.unit);
+  let html = `<div class="card">
+    <div class="toggle-row">
+      <button class="btn secondary" id="togglePinyin">${state.showPinyin ? '隐藏拼音' : '显示拼音'}</button>
+    </div>
+    <div class="vocab-list">`;
+  u.vocab.forEach(v => {
+    html += `<div class="vocab-row">
+      <div class="hz">${v.hz} <span class="pill">${v.pos}</span></div>
+      <div class="py ${state.showPinyin ? '' : 'hidden'}">${v.py}</div>
+      <div class="en">${v.en}</div>
+    </div>`;
+  });
+  html += `</div></div>`;
+  document.getElementById('main').innerHTML = html;
+  document.getElementById('togglePinyin').addEventListener('click', () => {
+    state.showPinyin = !state.showPinyin;
+    renderVocab();
+  });
+}
+
+function renderQuiz() {
+  const u = getUnit(state.unit);
+  if (!u.quiz.length) {
+    document.getElementById('main').innerHTML = `<div class="card"><div class="empty-state">这个单元没有测验题</div></div>`;
+    return;
+  }
+  if (state.quiz.order.length === 0) resetQuiz();
+  if (state.quiz.idx >= state.quiz.order.length) {
+    document.getElementById('main').innerHTML = `<div class="card">
+      <h2>测验完成！🎉</h2>
+      <div class="quiz-score" style="font-size:1.1rem;margin-bottom:14px;">得分：${state.quiz.score} / ${state.quiz.order.length}</div>
+      <button class="btn" id="restartQuiz">再测一次</button>
+    </div>`;
+    document.getElementById('restartQuiz').addEventListener('click', () => { resetQuiz(); renderQuiz(); });
+    return;
+  }
+  const qIdx = state.quiz.order[state.quiz.idx];
+  const q = u.quiz[qIdx];
+  let html = `<div class="card">
+    <div class="quiz-progress">第 ${state.quiz.idx + 1} / ${state.quiz.order.length} 题　·　单元 ${u.id}: ${u.title}</div>
+    <div class="quiz-hz">${q.hanzi}</div>
+    <div class="quiz-en">${q.en}</div>
+    <div class="quiz-opts">`;
+  q.options.forEach((opt, i) => {
+    html += `<div class="quiz-opt" data-opt="${opt.replace(/"/g, '&quot;')}">${opt}</div>`;
+  });
+  html += `</div>
+    <div class="quiz-footer">
+      <div class="quiz-score">本轮得分：${state.quiz.score}</div>
+      <button class="btn secondary" id="nextQ" disabled>下一题</button>
+    </div>
+  </div>`;
+  document.getElementById('main').innerHTML = html;
+  state.quiz.answered = false;
+
+  document.querySelectorAll('.quiz-opt').forEach(el => {
+    el.addEventListener('click', () => {
+      if (state.quiz.answered) return;
+      state.quiz.answered = true;
+      const chosen = el.dataset.opt;
+      document.querySelectorAll('.quiz-opt').forEach(o => o.classList.add('disabled'));
+      if (chosen === q.correct) {
+        el.classList.add('correct');
+        state.quiz.score++;
+      } else {
+        el.classList.add('wrong');
+        document.querySelectorAll('.quiz-opt').forEach(o => {
+          if (o.dataset.opt === q.correct) o.classList.add('correct');
+        });
+        addMistake({ hanzi: q.hanzi, correct: q.correct, en: q.en, unit: u.id, unitTitle: u.title });
+      }
+      document.getElementById('nextQ').disabled = false;
+    });
+  });
+  document.getElementById('nextQ').addEventListener('click', () => {
+    state.quiz.idx++;
+    renderQuiz();
+  });
+}
+
+function renderDialogue() {
+  const u = getUnit(state.unit);
+  let html = `<div class="card">
+    <div class="toggle-row">
+      <button class="btn secondary" id="toggleDlgPinyin">${state.showDlgPinyin ? '隐藏拼音' : '显示拼音'}</button>
+    </div>`;
+  u.dialogue.forEach(l => {
+    if (!l.sp && !l.hz) {
+      html += `<div class="dlg-line" style="text-align:center;color:#555;">${l.py || ''}</div>`;
+      return;
+    }
+    html += `<div class="dlg-line">
+      ${l.sp ? `<div class="dlg-sp">${l.sp}</div>` : ''}
+      <div class="dlg-hz">${l.hz}</div>
+      <div class="dlg-py ${state.showDlgPinyin ? '' : 'hidden'}">${l.py}</div>
+    </div>`;
+  });
+  html += `</div>`;
+  document.getElementById('main').innerHTML = html;
+  document.getElementById('toggleDlgPinyin').addEventListener('click', () => {
+    state.showDlgPinyin = !state.showDlgPinyin;
+    renderDialogue();
+  });
+}
+
+function renderScenario() {
+  const u = getUnit(state.unit);
+  if (!u.scenarios || !u.scenarios.length) {
+    document.getElementById('main').innerHTML = `<div class="card"><div class="empty-state">这个单元没有场景练习</div></div>`;
+    return;
+  }
+  if (state.scenarioIdx >= u.scenarios.length) state.scenarioIdx = 0;
+  const s = u.scenarios[state.scenarioIdx];
+  let html = `<div class="card">
+    <div class="toggle-row" style="justify-content:space-between;">
+      <div style="color:var(--muted);font-size:0.8rem;">场景 ${state.scenarioIdx + 1} / ${u.scenarios.length}</div>
+      <button class="btn secondary" id="nextScenario">换一个场景 ➜</button>
+    </div>
+    <h2>${s.title}</h2>
+    <p style="color:var(--muted);font-size:0.9rem;">${s.scenario}</p>
+
+    <div class="sentence-counter">
+      <div>
+        <div style="font-size:0.75rem;color:var(--muted);">自由表达句数（目标 ≥ 8 句）</div>
+        <div class="num ${state.sentenceCount >= 8 ? 'ok' : ''}">${state.sentenceCount}</div>
+      </div>
+      <div class="counter-btns">
+        <button id="cntMinus">－</button>
+        <button id="cntPlus">＋</button>
+        <button id="cntReset" style="width:auto;padding:0 10px;">重置</button>
+      </div>
+    </div>
+
+    <div class="scn-block">
+      <h3>A 可以问 / 说：</h3>
+      <ul>${s.aq.map(x => `<li>${x}</li>`).join('')}</ul>
+    </div>
+    <div class="scn-block">
+      <h3>B 可以问 / 说：</h3>
+      <ul>${s.bq.map(x => `<li>${x}</li>`).join('')}</ul>
+    </div>
+    <div class="scn-block">
+      <h3>延伸问题（考官可能追问）：</h3>
+      <ul>${s.ext.map(x => `<li>${x}</li>`).join('')}</ul>
+    </div>
+  </div>`;
+  document.getElementById('main').innerHTML = html;
+  document.getElementById('nextScenario').addEventListener('click', () => {
+    state.scenarioIdx = (state.scenarioIdx + 1) % u.scenarios.length;
+    state.sentenceCount = 0;
+    renderScenario();
+  });
+  document.getElementById('cntPlus').addEventListener('click', () => { state.sentenceCount++; renderScenario(); });
+  document.getElementById('cntMinus').addEventListener('click', () => { state.sentenceCount = Math.max(0, state.sentenceCount - 1); renderScenario(); });
+  document.getElementById('cntReset').addEventListener('click', () => { state.sentenceCount = 0; renderScenario(); });
+}
+
+function renderMistakes() {
+  const arr = loadMistakes();
+  let html = `<div class="card">
+    <h2>错题本 (${arr.length})</h2>`;
+  if (!arr.length) {
+    html += `<div class="empty-state">还没有错题，继续加油！</div>`;
+  } else {
+    html += arr.map((m, i) => `
+      <div class="mistake-item">
+        <div>
+          <div style="font-size:1rem;">${m.hanzi} <span style="color:var(--accent2);">${m.correct}</span></div>
+          <div style="color:var(--muted);font-size:0.78rem;">${m.en} · Unit ${m.unit} ${m.unitTitle || ''}</div>
+        </div>
+        <div class="x" data-idx="${i}">✕</div>
+      </div>
+    `).join('');
+    html += `<button class="btn secondary" id="clearAll" style="margin-top:10px;">清空错题本</button>`;
+  }
+  html += `</div>`;
+  document.getElementById('main').innerHTML = html;
+  document.querySelectorAll('.mistake-item .x').forEach(el => {
+    el.addEventListener('click', () => removeMistake(parseInt(el.dataset.idx)));
+  });
+  const clearBtn = document.getElementById('clearAll');
+  if (clearBtn) clearBtn.addEventListener('click', () => { saveMistakes([]); render(); });
+}
+
+function render() {
+  renderUnitTabs();
+  renderModeTabs();
+  if (state.mode === 'vocab') renderVocab();
+  else if (state.mode === 'quiz') renderQuiz();
+  else if (state.mode === 'dialogue') renderDialogue();
+  else if (state.mode === 'scenario') renderScenario();
+  else if (state.mode === 'mistakes') renderMistakes();
+}
+
+document.getElementById('modeTabs').addEventListener('click', (e) => {
+  const t = e.target.closest('.mode-tab');
+  if (!t) return;
+  state.mode = t.dataset.mode;
+  if (state.mode === 'quiz') resetQuiz();
+  render();
+});
+
+resetQuiz();
+render();
+</script>
+</body>
+</html>
